@@ -24,8 +24,14 @@ import org.apache.spark.sql.types.StringType
 case class ShowVersionCommand() extends LeafRunnableCommand {
   override val output: Seq[Attribute] =
     Seq(AttributeReference("user", StringType, nullable = true)())
+
   override def run(sparkSession: SparkSession): Seq[Row] = {
-    val outputString = System.getenv("SPARK_USER")
-    Seq(Row(outputString))
+    import org.apache.spark.SPARK_VERSION
+    val outputString1 = "spark.version:" + SPARK_VERSION
+    val outputString2 = "java.version:" + System.getProperty("java.version")
+
+    val out = outputString1 + "\n" + outputString2
+
+    Seq(Row(out))
   }
 }
